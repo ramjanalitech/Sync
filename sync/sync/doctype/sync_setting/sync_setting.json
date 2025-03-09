@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-09 18:33:13.490596",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sync_url",
+  "api_key",
+  "api_secret"
+ ],
+ "fields": [
+  {
+   "fieldname": "sync_url",
+   "fieldtype": "Data",
+   "label": "Sync URL"
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Data",
+   "label": "API Key"
+  },
+  {
+   "fieldname": "api_secret",
+   "fieldtype": "Data",
+   "label": "API Secret"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-09 18:35:59.665673",
+ "modified_by": "Administrator",
+ "module": "Sync",
+ "name": "Sync Setting",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
