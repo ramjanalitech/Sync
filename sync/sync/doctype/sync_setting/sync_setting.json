@@ -7,7 +7,8 @@
  "field_order": [
   "sync_url",
   "api_key",
-  "api_secret"
+  "api_secret",
+  "payment_terms_template"
  ],
  "fields": [
   {
@@ -24,12 +25,18 @@
    "fieldname": "api_secret",
    "fieldtype": "Data",
    "label": "API Secret"
+  },
+  {
+   "fieldname": "payment_terms_template",
+   "fieldtype": "Link",
+   "label": "Payment Terms Template",
+   "options": "Payment Terms Template"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-03-09 18:35:59.665673",
+ "modified": "2025-03-13 02:33:46.950849",
  "modified_by": "Administrator",
  "module": "Sync",
  "name": "Sync Setting",

@@ -1,0 +1,13 @@
+[
+    {
+		"doctype":"Custom Field",
+		"dt":"Stock Entry",
+		"fieldname":"sales_customer",
+		"name":"sales_customer",
+		"module":"sync",
+		"fieldtype":"Link",
+		"insert_after":"asset_repair",
+		"label":"sales_customer",
+        "options": "Customer"
+    }
+]
