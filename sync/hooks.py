@@ -163,9 +163,9 @@ doctype_js = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "sync.event.get_events"
-# }
+override_whitelisted_methods = {
+    "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,

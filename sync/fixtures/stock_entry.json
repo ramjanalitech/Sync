@@ -21,5 +21,15 @@
 		"insert_after":"apply_putaway_rule",
 		"label":"sync",
         "default":1
+	},
+	{
+		"doctype":"Custom Field",
+		"dt":"Sales Invoice Item",
+		"fieldname":"fetch_last_rate",
+		"name":"fetch_last_rate",
+		"module":"sync",
+		"fieldtype":"Button",
+		"insert_after":"brand",
+		"label":"Fetch Last Rate"
 	}
 ]
