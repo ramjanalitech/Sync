@@ -8,6 +8,18 @@
 		"fieldtype":"Link",
 		"insert_after":"asset_repair",
 		"label":"sales_customer",
-        "options": "Customer"
-    }
+        "options": "Customer",
+		"mandatory_depends_on": "eval:doc.purpose == 'Material Transfer'"
+    },
+	{
+		"doctype":"Custom Field",
+		"dt":"Stock Entry",
+		"fieldname":"sync",
+		"name":"sync",
+		"module":"sync",
+		"fieldtype":"Check",
+		"insert_after":"apply_putaway_rule",
+		"label":"sync",
+        "default":1
+	}
 ]

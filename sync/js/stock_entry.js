@@ -71,7 +71,9 @@ frappe.ui.form.on("Stock Entry", {
     on_submit: function(frm) {
         // Handle Material Transfer
         if (frm.doc.stock_entry_type === "Material Transfer") {
-            handleMaterialTransfer(frm);
+            if (frm.doc.sync == 1){
+                handleMaterialTransfer(frm);
+            }            
         }
 
         // Handle Material Receipt
