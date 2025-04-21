@@ -29,7 +29,7 @@
 		"name":"fetch_last_rate",
 		"module":"sync",
 		"fieldtype":"Button",
-		"insert_after":"brand",
+		"insert_after":"cost_center",
 		"label":"Fetch Last Rate"
 	}
 ]
