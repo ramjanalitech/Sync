@@ -25,8 +25,8 @@
 	{
 		"doctype":"Custom Field",
 		"dt":"Sales Invoice Item",
-		"fieldname":"fetch_last_rate",
-		"name":"fetch_last_rate",
+		"fieldname":"fetch_last_rate1",
+		"name":"fetch_last_rate1",
 		"module":"sync",
 		"fieldtype":"Button",
 		"insert_after":"cost_center",

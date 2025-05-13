@@ -28,7 +28,8 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 doctype_js = {
-    "Stock Entry": "js/stock_entry.js"
+    "Stock Entry": "js/stock_entry.js",
+    "Sales Invoice": "js/sales_invoice.js"
 }
 
 # include js in doctype views
@@ -133,6 +134,12 @@ doctype_js = {
 # 		"on_trash": "method"
 # 	}
 # }
+doc_events = {
+    "Sales Invoice": {
+        "on_submit": "sync.attachment.generate_pdf_on_submit"
+    }
+}
+
 
 # Scheduled Tasks
 # ---------------
@@ -164,7 +171,8 @@ doctype_js = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-    "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate"
+    "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate",
+    "sync.whatsapp.whatsapp_get_doc":"sync.whatsapp.whatsapp_get_doc"
 }
 #
 # each overriding function accepts a `data` argument;
