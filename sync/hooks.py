@@ -136,7 +136,8 @@ doctype_js = {
 # }
 doc_events = {
     "Sales Invoice": {
-        "on_submit": "sync.attachment.generate_pdf_on_submit"
+        # "on_submit": "sync.attachment.generate_pdf_on_submit"
+        "on_submit": "sync.whatsapp.generate_pdf_and_send_whatsapp_on_submit"
     }
 }
 
@@ -172,7 +173,7 @@ doc_events = {
 #
 override_whitelisted_methods = {
     "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate",
-    "sync.whatsapp.whatsapp_get_doc":"sync.whatsapp.whatsapp_get_doc"
+    "sync.whatsapp.generate_pdf_and_send_whatsapp":"sync.whatsapp.generate_pdf_and_send_whatsapp"
 }
 #
 # each overriding function accepts a `data` argument;
