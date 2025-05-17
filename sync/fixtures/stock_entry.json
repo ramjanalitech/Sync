@@ -31,5 +31,15 @@
 		"fieldtype":"Button",
 		"insert_after":"cost_center",
 		"label":"Fetch Last Rate"
+	},
+	{
+		"doctype":"Custom Field",
+		"dt":"Sales Invoice",
+		"fieldname":"by_pass",
+		"name":"By Pass",
+		"module":"sync",
+		"fieldtype":"Check",
+		"insert_after":"amended_from",
+		"label":"By Pass"
 	}
 ]
