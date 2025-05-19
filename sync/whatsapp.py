@@ -6,65 +6,10 @@ from frappe.utils import formatdate
 from frappe.utils import get_files_path, get_url
 from frappe import _
 
-# @frappe.whitelist()
-# def generate_pdf_and_send_whatsapp(doc, method=None):
-#     doc = frappe.get_doc("Sales Invoice", doc) if isinstance(doc, str) else doc
-#     try:
-#         # doc = frappe.get_doc("Sales Invoice", docname)
-#         # Generate PDF
-#         print_format = (
-#             frappe.db.get_value(
-#                 "Property Setter",
-#                 {"doc_type": "Sales Invoice", "property": "default_print_format"},
-#                 "value",
-#             )
-#             or "Standard"
-#         )
-#         frappe.msgprint(f"print_format :{print_format}")
-#         pdf_content = frappe.get_print(
-#             "Sales Invoice",
-#             doc.name,
-#             print_format=print_format,
-#             as_pdf=True
-#         )
-
-#         if not pdf_content:
-#             frappe.throw(_("Failed to generate PDF for Sales Invoice {0}").format(doc.name))
-
-#         # Save the PDF
-#         file_name = f"{doc.name}.pdf"
-#         file_path = get_files_path(file_name)
-
-#         with open(file_path, "wb") as f:
-#             f.write(pdf_content)
-
-#         # Attach PDF to the document
-#         file_doc = frappe.get_doc({
-#             "doctype": "File",
-#             "file_name": file_name,
-#             "attached_to_doctype": "Sales Invoice",
-#             "attached_to_name": doc.name,
-#             "is_private": 0,
-#             "content": pdf_content
-#         })
-#         file_doc.save(ignore_permissions=True)
-#         frappe.db.commit()
-
-#         # Send via WhatsApp
-#         send_whatsapp_with_pdf(file_doc.file_url, file_name, doc)
-
-#     except Exception:
-#         frappe.log_error(frappe.get_traceback(), "Error in generate_pdf_and_send_whatsapp")
-
 @frappe.whitelist()
 def generate_pdf_and_send_whatsapp_on_submit(doc, method=None):
     # Call the shared utility
     send_invoice_whatsapp(doc.name)
-
-# @frappe.whitelist()
-# def send_invoice_whatsapp_button(docname):
-#     frappe.msgprint(f"docname")
-#     return send_invoice_whatsapp(docname)
 
 @frappe.whitelist()
 def send_invoice_whatsapp_button(docname):
@@ -76,10 +21,20 @@ def send_invoice_whatsapp_button(docname):
         "contact_mobile": doc.contact_mobile
     }
 
+    if not doc.contact_mobile:
+        frappe.throw(_("Contact number is missing. Please update the customer's mobile number."))
+
     # Optional: log or debug
     frappe.msgprint(f"Sending WhatsApp for invoice: {invoice['name']}")
     
     return send_invoice_whatsapp(invoice)
+
+def get_messagerider_credentials(branch_name):
+    config = frappe.get_doc("Configuration")
+    for row in config.configuration_details:
+        if row.branch == branch_name:
+            return row.authtoken, row.password
+    frappe.throw(f"No MessageRider credentials found for branch: {branch_name}")
 
 def send_invoice_whatsapp(docname):
     doc = frappe.get_doc("Sales Invoice", docname)
@@ -124,20 +79,44 @@ def send_invoice_whatsapp(docname):
         f"Dear {customer_name}, your Sales Invoice *{doc.name}* amount is *{amount}* "
         f"and the due date is *{due_date}*. Thank you!"
     )
+    
+    # if doc.branch in ["Pimpri", "Pune City"]:
+    #     authtoken = frappe.conf.get("messagerider_authtoken_pimpri")
+    #     password = frappe.conf.get("messagerider_password_pimpri")
+    #     frappe.msgprint(f"authtoken : {authtoken}")
+    #     frappe.msgprint(f"password : {password}")
+    # elif doc.branch in ["Vapi"]:
+    #     authtoken = frappe.conf.get("messagerider_authtoken_vapi")
+    #     password = frappe.conf.get("messagerider_password_vapi")
+    #     frappe.msgprint(f"authtoken : {authtoken}")
+    #     frappe.msgprint(f"password : {password}")
+    # else:
+    #     authtoken = frappe.conf.get("messagerider_authtoken_ahmedabad")
+    #     password = frappe.conf.get("messagerider_password_ahmedabad")
+    #     frappe.msgprint(f"authtoken : {authtoken}")
+    #     frappe.msgprint(f"password : {password}")
+
+    # Fetch credentials based on branch
+    authtoken, password = get_messagerider_credentials(doc.branch)
+    frappe.msgprint(f"authtoken: {authtoken}")
+    frappe.msgprint(f"password: {password}")
 
     payload = {
-        "authtoken": "0000091",
-        "Password": "Admin@#1",
+        # "authtoken": "0000091",
+        # "Password": "Admin@#1",
+        "authtoken": authtoken,
+        "Password": password,
         "Message": message,
         "receiverMobileNo": doc.contact_mobile
     }
-
+    frappe.msgprint(f"payload :{payload}")
     files = {
         "Uploadfile": (file_name, pdf_content, "application/pdf")
     }
 
     response = requests.post(
-        "http://wb3api.messagerider.com/MessageRider/SendMsg",
+        # "http://wb3api.messagerider.com/MessageRider/SendMsg",
+        "https://wbcapi.messagerider.com/MessageRider/SendMsg?=null",
         data=payload,
         files=files
     )
