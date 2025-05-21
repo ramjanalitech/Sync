@@ -29,7 +29,8 @@ app_license = "mit"
 
 doctype_js = {
     "Stock Entry": "js/stock_entry.js",
-    "Sales Invoice": "js/sales_invoice.js"
+    "Sales Invoice": "js/sales_invoice.js",
+    "Payment Entry": "js/payment_entry.js"
 }
 
 # include js in doctype views
@@ -138,6 +139,9 @@ doc_events = {
     "Sales Invoice": {
         # "on_submit": "sync.attachment.generate_pdf_on_submit"
         "on_submit": "sync.whatsapp.generate_pdf_and_send_whatsapp_on_submit"
+    },
+    "Payment Entry": {
+        "on_submit": "sync.payment_entry.send_whatsapp_on_payment_submit"
     }
 }
 
@@ -173,7 +177,8 @@ doc_events = {
 #
 override_whitelisted_methods = {
     "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate",
-    "sync.whatsapp.generate_pdf_and_send_whatsapp":"sync.whatsapp.generate_pdf_and_send_whatsapp"
+    "sync.whatsapp.generate_pdf_and_send_whatsapp":"sync.whatsapp.generate_pdf_and_send_whatsapp",
+    "sync.payment_entry.send_whatsapp_on_payment_submit":"sync.payment_entry.send_whatsapp_on_payment_submit"
 }
 #
 # each overriding function accepts a `data` argument;

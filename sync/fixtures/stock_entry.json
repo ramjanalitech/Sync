@@ -41,5 +41,16 @@
 		"fieldtype":"Check",
 		"insert_after":"amended_from",
 		"label":"By Pass"
+	},
+	{
+		"doctype": "Custom Field",
+		"dt": "Payment Entry",
+		"fieldname": "party_mobile",
+		"name":"Mobile Number",
+		"module":"sync",
+		"label": "Mobile Number",
+		"fieldtype": "Data",
+		"insert_after": "contact_person",
+		"fetch_from": "contact_person.mobile_no"
 	}
 ]

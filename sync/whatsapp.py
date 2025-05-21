@@ -9,7 +9,12 @@ from frappe import _
 @frappe.whitelist()
 def generate_pdf_and_send_whatsapp_on_submit(doc, method=None):
     # Call the shared utility
-    send_invoice_whatsapp(doc.name)
+    # send_invoice_whatsapp(doc.name)
+    result = send_invoice_whatsapp(doc.name)
+    if result.get("status") == "Sent":
+        frappe.msgprint(_("WhatsApp message sent successfully to {0}").format(doc.contact_mobile))
+    else:
+        frappe.msgprint(_("Failed to send WhatsApp message. Reason: {0}").format(result.get("message")))
 
 @frappe.whitelist()
 def send_invoice_whatsapp_button(docname):
@@ -98,8 +103,8 @@ def send_invoice_whatsapp(docname):
 
     # Fetch credentials based on branch
     authtoken, password = get_messagerider_credentials(doc.branch)
-    frappe.msgprint(f"authtoken: {authtoken}")
-    frappe.msgprint(f"password: {password}")
+    # frappe.msgprint(f"authtoken: {authtoken}")
+    # frappe.msgprint(f"password: {password}")
 
     payload = {
         # "authtoken": "0000091",
@@ -109,7 +114,7 @@ def send_invoice_whatsapp(docname):
         "Message": message,
         "receiverMobileNo": doc.contact_mobile
     }
-    frappe.msgprint(f"payload :{payload}")
+    # frappe.msgprint(f"payload :{payload}")
     files = {
         "Uploadfile": (file_name, pdf_content, "application/pdf")
     }
