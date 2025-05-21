@@ -85,26 +85,9 @@ def send_invoice_whatsapp(docname):
         f"and the due date is *{due_date}*. Thank you!"
     )
     
-    # if doc.branch in ["Pimpri", "Pune City"]:
-    #     authtoken = frappe.conf.get("messagerider_authtoken_pimpri")
-    #     password = frappe.conf.get("messagerider_password_pimpri")
-    #     frappe.msgprint(f"authtoken : {authtoken}")
-    #     frappe.msgprint(f"password : {password}")
-    # elif doc.branch in ["Vapi"]:
-    #     authtoken = frappe.conf.get("messagerider_authtoken_vapi")
-    #     password = frappe.conf.get("messagerider_password_vapi")
-    #     frappe.msgprint(f"authtoken : {authtoken}")
-    #     frappe.msgprint(f"password : {password}")
-    # else:
-    #     authtoken = frappe.conf.get("messagerider_authtoken_ahmedabad")
-    #     password = frappe.conf.get("messagerider_password_ahmedabad")
-    #     frappe.msgprint(f"authtoken : {authtoken}")
-    #     frappe.msgprint(f"password : {password}")
 
     # Fetch credentials based on branch
     authtoken, password = get_messagerider_credentials(doc.branch)
-    # frappe.msgprint(f"authtoken: {authtoken}")
-    # frappe.msgprint(f"password: {password}")
 
     payload = {
         # "authtoken": "0000091",

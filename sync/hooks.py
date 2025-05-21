@@ -178,7 +178,8 @@ doc_events = {
 override_whitelisted_methods = {
     "sync.sync.sales_invoice.get_last_selling_rate":"sync.sync.sales_invoice.get_last_selling_rate",
     "sync.whatsapp.generate_pdf_and_send_whatsapp":"sync.whatsapp.generate_pdf_and_send_whatsapp",
-    "sync.payment_entry.send_whatsapp_on_payment_submit":"sync.payment_entry.send_whatsapp_on_payment_submit"
+    "sync.payment_entry.send_whatsapp_on_payment_submit":"sync.payment_entry.send_whatsapp_on_payment_submit",
+    "sync.sales_invoice.get_last_rates":"sync.sales_invoice.get_last_rates"
 }
 #
 # each overriding function accepts a `data` argument;
