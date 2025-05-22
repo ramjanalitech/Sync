@@ -114,20 +114,37 @@ def send_invoice_whatsapp(docname):
     except Exception:
         resp_data = {}
 
+    # if response.status_code == 200 and resp_data.get("Status") == 1:
+    #     return {
+    #         "status": "Sent",
+    #         "message": f"WhatsApp sent to {doc.contact_mobile}.",
+    #         "api_response": resp_data
+    #     }
+    # else:
+    #     error_msg = resp_data.get("ErrorMessage") or resp_data.get("Message") or "Unknown error"
+    #     return {
+    #         "status": "Failed",
+    #         "message": f"WhatsApp failed: {error_msg}",
+    #         "api_response": resp_data
+    #     }
+
+    file_url = file_doc.file_url
+
     if response.status_code == 200 and resp_data.get("Status") == 1:
+        log_whatsapp_status(doc, "Sent", resp_data, file_url)
         return {
             "status": "Sent",
             "message": f"WhatsApp sent to {doc.contact_mobile}.",
             "api_response": resp_data
         }
     else:
+        log_whatsapp_status(doc, "Failed", resp_data, file_url)
         error_msg = resp_data.get("ErrorMessage") or resp_data.get("Message") or "Unknown error"
         return {
             "status": "Failed",
             "message": f"WhatsApp failed: {error_msg}",
             "api_response": resp_data
         }
-
 
 @frappe.whitelist()
 def send_whatsapp_with_pdf(file_url, file_name, doc):
@@ -177,3 +194,18 @@ def send_whatsapp_with_pdf(file_url, file_name, doc):
 
     except Exception:
         frappe.log_error(frappe.get_traceback(), f"Error sending WhatsApp for {doc.name}")
+
+# Save WhatsApp log
+def log_whatsapp_status(doc, status, response_data, file_url=None):
+    try:
+        frappe.get_doc({
+            "doctype": "Whatsapp Log",
+            "doctype_name": "Sales Invoice",
+            "customer": doc.customer,
+            "document_name": doc.name,
+            "url": file_url or "",
+            "status": status,
+            "response": frappe.as_json(response_data)
+        }).insert(ignore_permissions=True)
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), f"Failed to log WhatsApp message for {doc.name}")
