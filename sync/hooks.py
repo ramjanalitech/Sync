@@ -30,7 +30,8 @@ app_license = "mit"
 doctype_js = {
     "Stock Entry": "js/stock_entry.js",
     "Sales Invoice": "js/sales_invoice.js",
-    "Payment Entry": "js/payment_entry.js"
+    "Payment Entry": "js/payment_entry.js",
+    "Process Statement Of Accounts": "js/process_statement_of_accounts.js"
 }
 
 # include js in doctype views
@@ -145,11 +146,11 @@ doc_events = {
     }
 }
 
-scheduler_events = {
-    "daily": [
-        "sync.overdue_invoice.send_overdue_invoice_reminders"
-    ]
-}
+# scheduler_events = {
+#     "daily": [
+#         "sync.overdue_invoice.send_overdue_invoice_reminders"
+#     ]
+# }
 
 # Scheduled Tasks
 # ---------------
@@ -185,7 +186,8 @@ override_whitelisted_methods = {
     "sync.whatsapp.generate_pdf_and_send_whatsapp":"sync.whatsapp.generate_pdf_and_send_whatsapp",
     "sync.payment_entry.send_whatsapp_on_payment_submit":"sync.payment_entry.send_whatsapp_on_payment_submit",
     "sync.sales_invoice.get_last_rates":"sync.sales_invoice.get_last_rates",
-    "sync.overdue_invoice.send_overdue_invoice_reminders":"sync.overdue_invoice.send_overdue_invoice_reminders"
+    "sync.overdue_invoice.send_overdue_invoice_reminders":"sync.overdue_invoice.send_overdue_invoice_reminders",
+    "sync.sync_stock_entry.get_item_tax_template":"sync.sync_stock_entry.get_item_tax_template"
 }
 #
 # each overriding function accepts a `data` argument;
