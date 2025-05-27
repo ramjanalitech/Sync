@@ -1,31 +1,5 @@
 import frappe
 
-# @frappe.whitelist()
-# def get_last_rates(customer, item_code):
-#     selling_rate = frappe.db.sql("""
-#         SELECT rate FROM `tabSales Invoice Item`
-#         WHERE item_code = %s AND parenttype = 'Sales Invoice'
-#         AND docstatus = 1 AND parent IN (
-#             SELECT name FROM `tabSales Invoice`
-#             WHERE customer = %s AND docstatus = 1
-#         )
-#         ORDER BY posting_date DESC, modified DESC
-#         LIMIT 1
-#     """, (item_code, customer), as_dict=1)
-
-#     purchase_rate = frappe.db.sql("""
-#         SELECT rate FROM `tabPurchase Invoice Item`
-#         WHERE item_code = %s AND parenttype = 'Purchase Invoice'
-#         AND docstatus = 1
-#         ORDER BY posting_date DESC, modified DESC
-#         LIMIT 1
-#     """, (item_code,), as_dict=1)
-
-#     return {
-#         "selling_rate": selling_rate[0].rate if selling_rate else None,
-#         "purchase_rate": purchase_rate[0].rate if purchase_rate else None
-#     }
-
 @frappe.whitelist()
 def get_last_rates(customer, item_code):
     selling_rate = frappe.db.sql("""
