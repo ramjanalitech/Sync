@@ -43,6 +43,71 @@
 		"label":"By Pass"
 	},
 	{
+		"doctype":"Custom Field",
+		"dt":"Process Statement Of Accounts",
+		"name":"fetch_customer_for_whatsapp_send",
+		"module":"sync",
+		"fieldtype":"Button",
+		"insert_after":"show_net_values_in_party_account",
+		"label":"Fetch Customer For Whatsapp Send",
+		"fieldname":"fetch_customer_for_whatsapp_send"
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Process Statement Of Accounts Customer",
+		"name":"Mobile Number",
+		"fetch_from": "customer.mobile_no",
+		"module":"sync",
+		"fieldname": "mobile_no",
+		"label":"Mobile Number",
+		"fieldtype": "Data",
+		"in_list_view": 1
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Item Tax Template",
+		"name":"GST Rate",
+		"module":"sync",
+		"fieldname": "gst_rate",
+		"label":"GST Rate",
+		"fieldtype": "Data",
+		"insert_after": "disabled"
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Stock Entry Detail",
+		"name":"Stock GST Rate",
+		"module":"sync",
+		"fieldname": "gst_rate",
+		"label":"GST Rate",
+		"fieldtype": "Data",
+		"insert_after": "item_tax_template",
+		"fetch_from": "item_tax_template.gst_rate"
+
+	},
+	{ 
+		"doctype":"Custom Field",
+		"dt": "Stock Entry Detail",
+		"name":"Item Tax Template",
+		"module":"sync",
+		"fieldname": "item_tax_template",
+		"label":"Item Tax Template",
+		"fieldtype": "Link",
+		"options": "Item Tax Template",
+		"insert_after": "allow_zero_valuation_rate"
+	},
+	{ 
+		"doctype":"Custom Field",
+		"dt": "Stock Entry Detail",
+		"name":"Tax Basic Rate",
+		"module":"sync",
+		"fieldname": "tax_basic_rate",
+		"label":"Tax Basic Rate",
+		"fieldtype": "Currency",
+		"insert_after": "basic_rate",
+		"in_list_view": 1
+	},
+	{
 		"doctype": "Custom Field",
 		"dt": "Payment Entry",
 		"fieldname": "party_mobile",
