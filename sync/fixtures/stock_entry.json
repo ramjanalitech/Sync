@@ -40,7 +40,8 @@
 		"module":"sync",
 		"fieldtype":"Check",
 		"insert_after":"amended_from",
-		"label":"By Pass"
+		"label":"By Pass",
+		"permlevel": 0
 	},
 	{
 		"doctype":"Custom Field",
@@ -72,18 +73,6 @@
 		"label":"GST Rate",
 		"fieldtype": "Data",
 		"insert_after": "disabled"
-	},
-	{
-		"doctype":"Custom Field",
-		"dt": "Stock Entry Detail",
-		"name":"Stock GST Rate",
-		"module":"sync",
-		"fieldname": "gst_rate",
-		"label":"GST Rate",
-		"fieldtype": "Data",
-		"insert_after": "item_tax_template",
-		"fetch_from": "item_tax_template.gst_rate"
-
 	},
 	{ 
 		"doctype":"Custom Field",
