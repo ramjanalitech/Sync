@@ -40,8 +40,7 @@
 		"module":"sync",
 		"fieldtype":"Check",
 		"insert_after":"amended_from",
-		"label":"By Pass",
-		"permlevel": 0
+		"label":"By Pass"
 	},
 	{
 		"doctype":"Custom Field",
@@ -63,27 +62,6 @@
 		"label":"Mobile Number",
 		"fieldtype": "Data",
 		"in_list_view": 1
-	},
-	{
-		"doctype":"Custom Field",
-		"dt": "Item Tax Template",
-		"name":"GST Rate",
-		"module":"sync",
-		"fieldname": "gst_rate",
-		"label":"GST Rate",
-		"fieldtype": "Data",
-		"insert_after": "disabled"
-	},
-	{ 
-		"doctype":"Custom Field",
-		"dt": "Stock Entry Detail",
-		"name":"Item Tax Template",
-		"module":"sync",
-		"fieldname": "item_tax_template",
-		"label":"Item Tax Template",
-		"fieldtype": "Link",
-		"options": "Item Tax Template",
-		"insert_after": "allow_zero_valuation_rate"
 	},
 	{ 
 		"doctype":"Custom Field",
