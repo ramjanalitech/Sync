@@ -16,6 +16,7 @@ def send_whatsapp_on_payment_submit(doc, method=None):
         frappe.throw(_("Contact number is missing. Please update the party's mobile number."))
 
     # Get WhatsApp credentials
+    # frappe.msgprint(f"doc.branch: {doc.branch}")
     authtoken, password = get_messagerider_credentials(doc.branch)
 
     # Skip sending if credentials are not returned (i.e., payment_entry is not enabled or not configured)
@@ -92,19 +93,40 @@ def send_whatsapp_on_payment_submit(doc, method=None):
         )
 
 
+# def get_messagerider_credentials(branch_name):
+#     config = frappe.get_all("Configuration", limit=1)
+#     if not config:
+#         frappe.throw("No Configuration document found.")
+
+#     config_doc = frappe.get_doc("Configuration", config[0].name)
+
+#     # Check if payment entry WhatsApp is enabled
+#     if config_doc.payment_entry != 1:
+#         return None, None
+
+#     for row in config_doc.configuration_details:
+#         if row.branch == branch_name:
+#             return row.authtoken, row.password
+
+#     return None, None  # Credentials not found, skip sending
+
+# Add commentMore actions
 def get_messagerider_credentials(branch_name):
-    config = frappe.get_all("Configuration", limit=1)
-    if not config:
-        frappe.throw("No Configuration document found.")
+    config = frappe.get_doc("Configuration")
+    for row in config.configuration_details:
+        config = frappe.get_all("Configuration", limit=1)
+        if not config:
+            frappe.throw("No Configuration document found.")
 
     config_doc = frappe.get_doc("Configuration", config[0].name)
 
-    # Check if payment entry WhatsApp is enabled
+    # If payment_entry is not enabled, return None to indicate WhatsApp sending should be skipped
     if config_doc.payment_entry != 1:
         return None, None
 
     for row in config_doc.configuration_details:
         if row.branch == branch_name:
             return row.authtoken, row.password
+    frappe.throw(f"No MessageRider credentials found for branch: {branch_name}")
 
     return None, None  # Credentials not found, skip sending
