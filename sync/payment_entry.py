@@ -93,40 +93,43 @@ def send_whatsapp_on_payment_submit(doc, method=None):
         )
 
 
-# def get_messagerider_credentials(branch_name):
-#     config = frappe.get_all("Configuration", limit=1)
-#     if not config:
-#         frappe.throw("No Configuration document found.")
-
-#     config_doc = frappe.get_doc("Configuration", config[0].name)
-
-#     # Check if payment entry WhatsApp is enabled
-#     if config_doc.payment_entry != 1:
-#         return None, None
-
-#     for row in config_doc.configuration_details:
-#         if row.branch == branch_name:
-#             return row.authtoken, row.password
-
-#     return None, None  # Credentials not found, skip sending
-
-# Add commentMore actions
 def get_messagerider_credentials(branch_name):
-    config = frappe.get_doc("Configuration")
-    for row in config.configuration_details:
-        config = frappe.get_all("Configuration", limit=1)
-        if not config:
-            frappe.throw("No Configuration document found.")
+    config = frappe.get_all("Configuration", limit=1)
+    frappe.msgprint(f"config:{config}")
+    if not config:
+        frappe.throw("No Configuration document found.")
 
     config_doc = frappe.get_doc("Configuration", config[0].name)
-
-    # If payment_entry is not enabled, return None to indicate WhatsApp sending should be skipped
+    frappe.msgprint(f"config_doc:{config_doc}")
+    # Check if payment entry WhatsApp is enabled
     if config_doc.payment_entry != 1:
         return None, None
 
     for row in config_doc.configuration_details:
         if row.branch == branch_name:
             return row.authtoken, row.password
-    frappe.throw(f"No MessageRider credentials found for branch: {branch_name}")
 
     return None, None  # Credentials not found, skip sending
+
+# Add commentMore actions
+# def get_messagerider_credentials(branch_name):
+#     config = frappe.get_doc("Configuration")
+#     frappe.msgprint(f"config:{config}")
+#     for row in config.configuration_details:
+#         config = frappe.get_all("Configuration", limit=1)
+#         frappe.msgprint(f"config:{config}")
+#         if not config:
+#             frappe.throw("No Configuration document found.")
+
+#     config_doc = frappe.get_doc("Configuration", config[0].name)
+
+#     # If payment_entry is not enabled, return None to indicate WhatsApp sending should be skipped
+#     if config_doc.payment_entry != 1:
+#         return None, None
+
+#     for row in config_doc.configuration_details:
+#         if row.branch == branch_name:
+#             return row.authtoken, row.password
+#     frappe.throw(f"No MessageRider credentials found for branch: {branch_name}")
+
+#     return None, None  # Credentials not found, skip sending
