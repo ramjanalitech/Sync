@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "creation": "2025-06-02 19:07:51.125162",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "configuration_details",
+  "payment_entry"
+ ],
+ "fields": [
+  {
+   "fieldname": "configuration_details",
+   "fieldtype": "Table",
+   "label": "Configuration Details",
+   "options": "Configuration Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "payment_entry",
+   "fieldtype": "Check",
+   "label": "Payment Entry"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-06-02 19:08:33.226078",
+ "modified_by": "Administrator",
+ "module": "Sync",
+ "name": "Configuration",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
