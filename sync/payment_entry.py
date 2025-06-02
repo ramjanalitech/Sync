@@ -93,17 +93,17 @@ def send_whatsapp_on_payment_submit(doc, method=None):
         )
 
 def get_messagerider_credentials(branch_name):
-    config = frappe.get_all("Configuration", limit=1)
+    config = frappe.get_doc("Configuration")
     if not config:
         frappe.throw("No Configuration document found.")
 
-    config_doc = frappe.get_doc("Configuration", config[0].name)
+    # config_doc = frappe.get_doc("Configuration", config[0].name)
 
     # If payment_entry is not enabled, return None to indicate WhatsApp sending should be skipped
-    if config_doc.payment_entry != 1:
+    if config.payment_entry != 1:
         return None, None
 
-    for row in config_doc.configuration_details:
+    for row in config.configuration_details:
         if row.branch == branch_name:
             return row.authtoken, row.password
 
