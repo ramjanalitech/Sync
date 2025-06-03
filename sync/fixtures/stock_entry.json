@@ -84,5 +84,27 @@
 		"fieldtype": "Data",
 		"insert_after": "contact_person",
 		"fetch_from": "contact_person.mobile_no"
+	},
+	{
+		"doctype": "Custom Field",
+		"dt": "Sales Invoice Item",
+		"fieldname": "including_gst_rate",
+		"name":"Including GST Rate",
+		"module":"sync",
+		"label": "Including GST Rate",
+		"fieldtype": "Currency",
+		"insert_after": "rate",
+		"in_list_view": 1
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Sales Invoice Item",
+		"name":"SI_GST Rate",
+		"module":"sync",
+		"fieldname": "gst_rate",
+		"label":"GST Rate",
+		"fieldtype": "Data",
+		"insert_after": "item_tax_template",
+		"fetch_from": "item_tax_template.gst_rate"
 	}
 ]

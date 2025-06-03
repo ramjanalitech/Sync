@@ -57,3 +57,35 @@ frappe.ui.form.on('Sales Invoice Item', {
         });
     }
 });
+
+frappe.ui.form.on('Sales Invoice Item', {
+    rate: function(frm, cdt, cdn) {
+        update_include_gst_rate(frm, cdt, cdn);
+    },
+    gst_rate: function(frm, cdt, cdn) {
+        update_include_gst_rate(frm, cdt, cdn);
+        update_base_rate_from_include(frm, cdt, cdn);
+    },
+    including_gst_rate: function(frm, cdt, cdn) {
+        update_base_rate_from_include(frm, cdt, cdn);
+    },
+    items_add: function(frm, cdt, cdn) {
+        update_include_gst_rate(frm, cdt, cdn);
+    }
+});
+
+function update_include_gst_rate(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (row.rate && row.gst_rate != null) {
+        row.including_gst_rate = row.rate * (1 + row.gst_rate / 100);
+        frm.refresh_field('items');
+    }
+}
+
+function update_base_rate_from_include(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (row.including_gst_rate && row.gst_rate != null) {
+        row.rate = row.including_gst_rate / (1 + row.gst_rate / 100);
+        frm.refresh_field('items');
+    }
+}
