@@ -89,3 +89,23 @@ function update_base_rate_from_include(frm, cdt, cdn) {
         frm.refresh_field('items');
     }
 }
+
+frappe.ui.form.on('Sales Invoice', {
+    margin_per: function(frm) {
+      calculate_margin_total(frm);
+    },
+  
+    grand_total: function(frm) {
+      calculate_margin_total(frm);
+    }
+  });
+  
+  function calculate_margin_total(frm) {
+    if (frm.doc.margin_per && frm.doc.total) {
+      frm.set_value(
+        'margin_amount',
+        (frm.doc.margin_per / 100) * frm.doc.total
+      );
+    }
+  }
+  

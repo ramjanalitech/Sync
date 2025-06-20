@@ -106,5 +106,27 @@
 		"fieldtype": "Data",
 		"insert_after": "item_tax_template",
 		"fetch_from": "item_tax_template.gst_rate"
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Sales Invoice",
+		"name":"Margin_per",
+		"module":"sync",
+		"fieldname": "margin_per",
+		"label":"Margin Per",
+		"fieldtype": "Float",
+		"insert_after": "disable_rounded_total",
+		"perm_level": 2
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Sales Invoice",
+		"name":"Margin Amount",
+		"module":"sync",
+		"fieldname": "margin_amount",
+		"label":"Margin Amount",
+		"fieldtype": "Currency",
+		"insert_after": "margin_per",
+		"perm_level": 2
 	}
 ]
