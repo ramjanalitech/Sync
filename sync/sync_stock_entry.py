@@ -75,7 +75,7 @@ def prepare_item_payload(item):
         "item_code": item.get("item_code"),
         "qty": item.get("qty"),
         "uom": item.get("uom"),
-        "basic_rate": item.get("basic_rate"),
+        "basic_rate": item.get("tax_basic_rate"),
         "valuation_rate": item.get("valuation_rate"),
         "warehouse": item.get("warehouse"),
         "target_warehouse": item.get("target_warehouse"),
@@ -228,3 +228,16 @@ def create_sales_invoice(stock_entry, customer):
     # Save the Sales Invoice as a draft
     sales_invoice.insert(ignore_permissions=True)
     return sales_invoice
+
+@frappe.whitelist()
+def get_item_tax_template(item_code):
+    """
+    Return the *first* Item Tax Template linked to this Item.
+    Adjust the query if you need company-specific logic.
+    """
+    template = frappe.db.get_value(
+        "Item Tax",
+        {"parenttype": "Item", "parent": item_code},
+        "item_tax_template"
+    )
+    return template or ""
