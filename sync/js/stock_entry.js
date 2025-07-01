@@ -80,9 +80,16 @@ function handleMaterialReceipt(frm) {
 }
 
 frappe.ui.form.on("Stock Entry Detail", {
-    item_code: update_tax_basic_rate,
+    qty: update_tax_basic_rate,
     basic_rate: update_tax_basic_rate,
-    gst_rate: update_tax_basic_rate
+    gst_rate: update_tax_basic_rate,
+
+    qty: function(frm, cdt, cdn) {
+        update_tax_basic_rate(frm, cdt, cdn);
+    },
+    gst_rate: function(frm, cdt, cdn) {
+        update_tax_basic_rate(frm, cdt, cdn);
+    },
 });
 
 function update_tax_basic_rate(frm, cdt, cdn) {
