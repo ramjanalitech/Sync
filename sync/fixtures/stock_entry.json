@@ -128,5 +128,16 @@
 		"fieldtype": "Currency",
 		"insert_after": "margin_per",
 		"perm_level": 2
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Stock Entry Details",
+		"name":"SE_GST Rate",
+		"module":"sync",
+		"fieldname": "gst_rate",
+		"label":"GST Rate",
+		"fieldtype": "Data",
+		"insert_after": "item_tax_template",
+		"fetch_from": "item_tax_template.gst_rate"
 	}
 ]
