@@ -139,5 +139,26 @@
 		"fieldtype": "Data",
 		"insert_after": "tax_basic_rate",
 		"fetch_from": "item_tax_template.gst_rate"
-	}
+	},
+	{
+		"doctype": "Custom Field",
+		"dt": "Purchase Invoice",
+		"name": "Purchase Invoice Replacement",
+		"module": "sync",
+		"fieldname": "is_replacement",
+		"label": "Is Replacement",
+		"fieldtype": "Check",
+		"insert_after": "is_return",
+		"depends_on": "eval:doc.is_return == 1"
+	},
+	{
+		"doctype": "Custom Field",
+		"dt": "Purchase Invoice",
+		"name": "PI Replacement Return",
+		"fieldname": "is_replacement_return",
+		"label": "Is Replacement Return",
+		"fieldtype": "Check",
+		"insert_after": "is_replacement",
+		"module": "sync"
+	}	  
 ]
