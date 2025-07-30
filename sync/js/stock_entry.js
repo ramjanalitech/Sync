@@ -1,5 +1,23 @@
 //  Code Refactor
 frappe.ui.form.on("Stock Entry", {
+    // refresh: function(frm) {
+    //     // Add custom button on form refresh
+    //     frm.add_custom_button("Fetch Rate", function() {
+    //         update_all_tax_basic_rates(frm);
+    //     }, __("Actions"));
+    // },
+    fetch_rate: function(frm) {
+        update_all_tax_basic_rates(frm);
+    },
+    before_submit: function(frm) {
+        // Also run logic before submitting
+        update_all_tax_basic_rates(frm);
+        if (frm.doc.stock_entry_type === "Material Transfer") {
+            if (frm.doc.sync == 1){
+                update_all_tax_basic_rates(frm);
+            }            
+        }
+    },
     on_submit: function(frm) {
         // Handle Material Transfer
         if (frm.doc.stock_entry_type === "Material Transfer") {
@@ -7,6 +25,7 @@ frappe.ui.form.on("Stock Entry", {
                 handleMaterialTransfer(frm);
             }            
         }
+        // update_all_tax_basic_rates(frm);
         // Handle Material Receipt
         if (frm.doc.stock_entry_type === "Material Receipt") {
             handleMaterialReceipt(frm);
@@ -79,25 +98,35 @@ function handleMaterialReceipt(frm) {
     });
 }
 
-frappe.ui.form.on("Stock Entry Detail", {
-    qty: update_tax_basic_rate,
-    basic_rate: update_tax_basic_rate,
-    gst_rate: update_tax_basic_rate,
+// frappe.ui.form.on("Stock Entry", {
+//     //qty: update_tax_basic_rate,
+//     basic_rate: update_tax_basic_rate,
+//     gst_rate: update_tax_basic_rate,
+//     fetch_rate:update_tax_basic_rate,
 
-    qty: function(frm, cdt, cdn) {
-        update_tax_basic_rate(frm, cdt, cdn);
-    },
-    gst_rate: function(frm, cdt, cdn) {
-        update_tax_basic_rate(frm, cdt, cdn);
-    },
-});
+//     fetch_rate: function(frm, cdt, cdn) {
+//         update_tax_basic_rate(frm, cdt, cdn);
+//     },
+//     gst_rate: function(frm, cdt, cdn) {
+//         update_tax_basic_rate(frm, cdt, cdn);
+//     },
+// });
 
-function update_tax_basic_rate(frm, cdt, cdn) {
-    let row = locals[cdt][cdn];
-    let basic_rate = flt(row.basic_rate);
-    let gst_rate = flt(row.gst_rate);
+// function update_tax_basic_rate(frm, cdt, cdn) {
+//     let row = locals[cdt][cdn];
+//     let basic_rate = flt(row.basic_rate);
+//     let gst_rate = flt(row.gst_rate);
 
-    row.tax_basic_rate = basic_rate + (basic_rate * gst_rate / 100);
+//     row.tax_basic_rate = basic_rate + (basic_rate * gst_rate / 100);
+//     frm.refresh_field("items");
+// }
+
+function update_all_tax_basic_rates(frm) {
+    (frm.doc.items || []).forEach(row => {
+        let basic_rate = flt(row.basic_rate);
+        let gst_rate = flt(row.gst_rate);
+        row.tax_basic_rate = basic_rate + (basic_rate * gst_rate / 100);
+    });
     frm.refresh_field("items");
 }
 

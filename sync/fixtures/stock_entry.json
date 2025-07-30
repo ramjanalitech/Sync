@@ -160,5 +160,16 @@
 		"fieldtype": "Check",
 		"insert_after": "is_replacement",
 		"module": "sync"
-	}	  
+	},
+	{
+		"doctype":"Custom Field",
+		"dt": "Stock Entry",
+		"name":"Fetch Rate",
+		"module":"sync",
+		"fieldname": "fetch_rate",
+		"label":"Fetch Rate",
+		"fieldtype": "Button",
+		"insert_after": "get_stock_and_rate"
+	}
+
 ]
