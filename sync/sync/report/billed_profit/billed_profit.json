@@ -1,0 +1,82 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {
+   "fieldname": "name",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "options": "Sales Invoice",
+   "width": 0
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "width": 0
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "width": 0
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "width": 0
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "width": 0
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status",
+   "width": 0
+  },
+  {
+   "fieldname": "margin_per",
+   "fieldtype": "Float",
+   "label": "Margin Percentage",
+   "width": 0
+  },
+  {
+   "fieldname": "margin_amount",
+   "fieldtype": "Currency",
+   "label": "Margin Amount",
+   "width": 0
+  }
+ ],
+ "creation": "2025-07-30 21:02:12.482184",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2025-07-30 21:02:12.482184",
+ "modified_by": "Administrator",
+ "module": "Sync",
+ "name": "Billed Profit",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\n    si.name AS \"Invoice:Link/Sales Invoice:150\",\n    si.customer AS \"Customer:Link/Customer:150\",\n    si.posting_date AS \"Posting Date:Date:100\",\n    si.total AS \"Total:Currency:120\",\n    si.grand_total AS \"Grand Total:Currency:120\",\n    si.status AS \"Status:Data:100\",\n    si.margin_per AS \"Margin Per:Float:100\",\n    si.margin_amount AS \"Margin Amount:Currency:120\"\nFROM\n    `tabSales Invoice` si\nWHERE\n    si.is_bill = 1\nORDER BY\n    si.posting_date DESC\n",
+ "ref_doctype": "Sales Invoice",
+ "report_name": "Billed Profit",
+ "report_script": "",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Accounts User"
+  }
+ ]
+}
