@@ -187,7 +187,9 @@ override_whitelisted_methods = {
     "sync.payment_entry.send_whatsapp_on_payment_submit":"sync.payment_entry.send_whatsapp_on_payment_submit",
     "sync.sales_invoice.get_last_rates":"sync.sales_invoice.get_last_rates",
     "sync.overdue_invoice.send_overdue_invoice_reminders":"sync.overdue_invoice.send_overdue_invoice_reminders",
-    "sync.sync_stock_entry.get_item_tax_template":"sync.sync_stock_entry.get_item_tax_template"
+    "sync.sync_stock_entry.get_item_tax_template":"sync.sync_stock_entry.get_item_tax_template",
+    "sync.sales_invoice.send_overdue_otp":"sync.sales_invoice.send_overdue_otp",
+    "sync.sales_invoice.verify_overdue_otp":"sync.sales_invoice.verify_overdue_otp"
 }
 #
 # each overriding function accepts a `data` argument;
