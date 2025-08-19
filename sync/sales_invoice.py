@@ -30,7 +30,7 @@ def get_last_rates(customer, item_code):
 
 @frappe.whitelist()
 def send_overdue_otp(customer):
-    phone = "7698737440"  # Must include country code if required by API
+    phone = "7977185868"  # Must include country code if required by API
 
     # phone = "7977185868"
     if not phone:
@@ -39,11 +39,13 @@ def send_overdue_otp(customer):
     otp = str(random.randint(100000, 999999))
     # frappe.msgprint(f"Generated OTP: {otp}")
 
+    customer_name = frappe.db.get_value("Customer", customer, "customer_name")
     # Store OTP in cache for 5 minutes
     frappe.cache().set_value(f"overdue_otp_{customer}", otp, expires_in_sec=300)
 
     # Send OTP
-    return send_whatsapp_message(phone, otp)
+    # return send_whatsapp_message(phone, otp)
+    return send_whatsapp_message(phone, otp, customer_name)
 
 
 @frappe.whitelist()
@@ -56,14 +58,19 @@ def verify_overdue_otp(customer, otp):
 
 
 @frappe.whitelist()
-def send_whatsapp_message(receiver_mobile_no, otp):
+# def send_whatsapp_message(receiver_mobile_no, otp):
+def send_whatsapp_message(receiver_mobile_no, otp, customer_name=None):
     # url = "https://wbcapi.messagerider.com/MessageRider/SendMsg"
     url = "https://wbcapi.messagerider.com/MessageRider/SendMsg"
     
+    # message = f" <b>{customer_name}<b>, Your verification OTP is {otp}" if customer_name else f"Your verification OTP is {otp}"
+    
+    message = f"Customer Name : {customer_name}, Your verification OTP is {otp}" if customer_name else f"Your verification OTP is {otp}"
     params = {
         "authtoken": "0000146",
         "password": "Prism@2025",
-        "message": f"Your verification OTP is {otp}",
+        # "message": f"Your verification OTP is {otp}",
+        "message": message,
         "receiverMobileNo": receiver_mobile_no
     }
     
@@ -79,3 +86,5 @@ def send_whatsapp_message(receiver_mobile_no, otp):
             frappe.throw(f"Error from API: {response.status_code} - {response.text}")
     except Exception as e:
         frappe.throw(f"API Request Failed: {str(e)}")
+
+

@@ -144,7 +144,7 @@ frappe.ui.form.on('Sales Invoice', {
                                 frappe.prompt(
                                     [
                                         {
-                                            label: 'Enter OTP',
+                                            label: 'Enter OTP Wich iS sent on 7977185868',
                                             fieldname: 'otp',
                                             fieldtype: 'Data',
                                             reqd: true
@@ -186,3 +186,5 @@ frappe.ui.form.on('Sales Invoice', {
         });
     }
 });
+
+
