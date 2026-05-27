@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "add_translate_data": 0,
  "columns": [],
  "creation": "2026-05-26 11:18:00.526250",
@@ -18,7 +18,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2026-05-26 11:33:25.991551",
+ "modified": "2026-05-27 10:57:06.939402",
  "modified_by": "Administrator",
  "module": "Sync",
  "name": "Item-wise Sales Register-Bill",
