@@ -30,7 +30,7 @@ def get_last_rates(customer, item_code):
 
 @frappe.whitelist()
 def send_overdue_otp(customer):
-    phone = "7977185868"  # Must include country code if required by API
+    phone = "8423594555"  # Must include country code if required by API
 
     # phone = "7977185868"
     if not phone:

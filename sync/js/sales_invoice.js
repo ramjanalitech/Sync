@@ -144,7 +144,7 @@ frappe.ui.form.on('Sales Invoice', {
                                 frappe.prompt(
                                     [
                                         {
-                                            label: 'Enter OTP Wich iS sent on 7977185868',
+                                            label: 'Enter OTP Wich iS sent on 9890472868',
                                             fieldname: 'otp',
                                             fieldtype: 'Data',
                                             reqd: true
