@@ -87,4 +87,81 @@ def send_whatsapp_message(receiver_mobile_no, otp, customer_name=None):
     except Exception as e:
         frappe.throw(f"API Request Failed: {str(e)}")
 
+# MOP Code
 
+from sync.mop_otp import (
+    get_mop_items,
+    is_mop_approval_valid,
+)
+
+
+def validate_mop(doc, method=None):
+    """
+    Server-side MOP validation.
+
+    Rules:
+    - Rate >= MOP -> normal save/submit
+    - Rate < MOP -> valid OTP approval required
+
+    MOP is always fetched from Item Master on the server.
+    No Sales Invoice field is used for OTP/token storage.
+    """
+
+    mop_items = get_mop_items(doc)
+
+    # No MOP violation
+    if not mop_items:
+        return
+
+    # Check whether OTP approval exists for the exact
+    # current item/rate/MOP combination.
+    if is_mop_approval_valid(mop_items):
+        return
+
+    frappe.throw(
+        "MOP approval is required because one or more item "
+        "rates are below the Minimum Offer Price (MOP). "
+        "Please verify the OTP."
+    )
+
+# # import frappe
+
+# from sync.mop_otp import (
+#     get_mop_items,
+#     consume_mop_verification
+# )
+
+
+# def validate_mop(doc, method=None):
+#     """
+#     Server-side MOP validation for Sales Invoice.
+
+#     If Rate < MOP, valid OTP verification is required.
+#     """
+
+#     mop_items = get_mop_items(doc)
+
+#     # No MOP violation
+#     if not mop_items:
+#         return
+
+#     token = doc.get("custom_mop_otp_token")
+
+#     if not token:
+#         frappe.throw(
+#             "MOP approval is required because one or more item rates "
+#             "are below the Minimum Offer Price."
+#         )
+
+#     # Verify OTP approval
+#     verified = consume_mop_verification(
+#         doc.name,
+#         token
+#     )
+
+#     if not verified:
+
+#         frappe.throw(
+#             "MOP OTP verification is required before saving/submitting "
+#             "this Sales Invoice."
+#         )

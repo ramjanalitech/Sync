@@ -27,6 +27,12 @@ app_license = "mit"
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
+#app_include_js = "js/general_ledger.js" # this is for the app level js
+# app_include_js = "/apps/sync/sync/js/general_ledger.js"
+app_include_js = [
+    "/assets/sync/js/general_ledger.js"
+]
+
 doctype_js = {
     "Stock Entry": "js/stock_entry.js",
     "Sales Invoice": "js/sales_invoice.js",
@@ -146,6 +152,15 @@ doc_events = {
     }
 }
 
+doc_events = {
+    "Item": {
+        "validate": "sync.item_mop.validate_mop"
+    },
+
+    "Sales Invoice": {
+        "validate": "sync.sales_invoice.validate_mop"
+    }
+}
 # scheduler_events = {
 #     "daily": [
 #         "sync.overdue_invoice.send_overdue_invoice_reminders"

@@ -170,6 +170,51 @@
 		"label":"Fetch Rate",
 		"fieldtype": "Button",
 		"insert_after": "get_stock_and_rate"
+	},
+	{
+		"name": "Item Price-mop",
+		"docstatus": 0,
+		"idx": 1,
+		"is_system_generated": 0,
+		"dt": "Item",
+		"module": "Sync",
+		"label": "MOP",
+		"fieldname": "mop",
+		"insert_after": "valuation_rate",
+		"length": 0,
+		"link_filters": null,
+		"fieldtype": "Currency",
+		"permlevel": 1,
+		"doctype": "Custom Field"
+	},
+	{
+		"name": "Sales Invoice Item-mop",
+		"docstatus": 0,
+		"idx": 35,
+		"dt": "Sales Invoice Item",
+		"module": "Sync",
+		"label": "MOP",
+		"fieldname": "mop",
+		"insert_after": "rate",
+		"fieldtype": "Currency",
+		"precision": "",
+		"read_only": 1,
+		"in_list_view": 1,
+		"doctype": "Custom Field"
+	},
+	{
+		"name": "Sales Invoice-mop_otp_token",
+		"docstatus": 0,
+		"dt": "Sales Invoice",
+		"module": "Sync",
+		"label": "mop_otp_token",
+		"fieldname": "mop_otp_token",
+		"insert_after": "rate",
+		"fieldtype": "Data",
+		"precision": "",
+		"read_only": 1,
+		"in_list_view": 1,
+		"doctype": "Custom Field"
 	}
-
 ]
+

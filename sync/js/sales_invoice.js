@@ -187,4 +187,495 @@ frappe.ui.form.on('Sales Invoice', {
     }
 });
 
+// New-1
 
+frappe.ui.form.on("Sales Invoice", {
+
+    // ========================================================
+    // REFRESH
+    // ========================================================
+
+    refresh(frm) {
+
+        // MOP in Sales Invoice Item is fetched from Item Master.
+        // Users should not manually edit it.
+        if (
+            frm.fields_dict.items &&
+            frm.fields_dict.items.grid
+        ) {
+
+            frm.fields_dict.items.grid.update_docfield_property(
+                "mop",
+                "read_only",
+                1
+            );
+        }
+    },
+
+
+    // ========================================================
+    // BEFORE SAVE
+    // ========================================================
+
+    before_save: async function(frm) {
+
+        // ----------------------------------------------------
+        // Get items from Sales Invoice
+        // ----------------------------------------------------
+
+        const items = [];
+
+        (frm.doc.items || []).forEach(row => {
+
+            if (!row.item_code) {
+                return;
+            }
+
+            items.push({
+                idx: row.idx,
+                item_code: row.item_code,
+                rate: flt(row.rate)
+            });
+        });
+
+
+        // ----------------------------------------------------
+        // Nothing to check
+        // ----------------------------------------------------
+
+        if (!items.length) {
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Check whether OTP approval already exists
+        // ----------------------------------------------------
+
+        const check_response = await frappe.call({
+
+            method:
+                "sync.mop_otp.check_mop_approval",
+
+            args: {
+                items: JSON.stringify(items)
+            },
+
+            freeze: true,
+
+            freeze_message:
+                "Checking MOP approval..."
+        });
+
+
+        const check_result =
+            check_response.message || {};
+
+
+        // ----------------------------------------------------
+        // No MOP violation OR already approved
+        // ----------------------------------------------------
+
+        if (
+            check_result.approved
+        ) {
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // OTP REQUIRED
+        // ----------------------------------------------------
+
+        const verified =
+            await show_mop_otp_dialog(
+                frm,
+                items
+            );
+
+
+        // ----------------------------------------------------
+        // OTP failed/cancelled
+        // ----------------------------------------------------
+
+        if (!verified) {
+
+            frappe.validated = false;
+
+            frappe.throw(
+                "Sales Invoice cannot be saved without MOP OTP verification."
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // OTP verified
+        //
+        // IMPORTANT:
+        // We do NOT call frm.save() again here.
+        //
+        // The current save operation continues after
+        // before_save completes.
+        // ----------------------------------------------------
+
+        return;
+    }
+
+});
+
+
+// ============================================================
+// MOP OTP DIALOG
+// ============================================================
+
+async function show_mop_otp_dialog(frm, items) {
+
+    return new Promise(async (resolve) => {
+
+        let resolved = false;
+
+        const resolve_once = function(value) {
+
+            if (resolved) {
+                return;
+            }
+
+            resolved = true;
+
+            resolve(value);
+        };
+
+
+        // ----------------------------------------------------
+        // Build MOP item display
+        // ----------------------------------------------------
+
+        const display_items = [];
+
+        (items || []).forEach(row => {
+
+            const invoice_row =
+                (frm.doc.items || []).find(
+                    r => r.idx === row.idx
+                );
+
+            if (!invoice_row) {
+                return;
+            }
+
+            const mop = flt(invoice_row.mop);
+            const rate = flt(invoice_row.rate);
+
+            if (
+                mop > 0 &&
+                rate < mop
+            ) {
+
+                display_items.push({
+                    idx: row.idx,
+                    item_code: row.item_code,
+                    rate: rate,
+                    mop: mop
+                });
+            }
+        });
+
+
+        // ----------------------------------------------------
+        // HTML
+        // ----------------------------------------------------
+
+        const item_html =
+            display_items.map(row => {
+
+                return `
+                    <tr>
+                        <td>
+                            ${frappe.utils.escape_html(
+                                row.item_code
+                            )}
+                        </td>
+
+                        <td style="text-align:right;">
+                            ${format_currency(row.rate)}
+                        </td>
+
+                        <td style="text-align:right;">
+                            ${format_currency(row.mop)}
+                        </td>
+                    </tr>
+                `;
+
+            }).join("");
+
+
+        // ----------------------------------------------------
+        // Dialog
+        // ----------------------------------------------------
+
+        const d = new frappe.ui.Dialog({
+
+            title: "MOP Approval Required",
+
+            fields: [
+
+                {
+                    fieldname: "info",
+                    fieldtype: "HTML",
+
+                    options: `
+                        <div class="alert alert-warning">
+                            <strong>
+                                MOP Approval Required
+                            </strong>
+
+                            <br>
+
+                            One or more item rates are below
+                            the Minimum Offer Price (MOP).
+                        </div>
+
+                        <table class="table table-bordered">
+
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th style="text-align:right;">
+                                        Rate
+                                    </th>
+                                    <th style="text-align:right;">
+                                        MOP
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                ${item_html}
+                            </tbody>
+
+                        </table>
+
+                        <div class="alert alert-info">
+                            OTP will be sent to the authorized
+                            mobile number.
+                        </div>
+                    `
+                },
+
+                {
+                    fieldname: "otp",
+                    fieldtype: "Data",
+                    label: "Enter OTP",
+
+                    description:
+                        "OTP is valid for 5 minutes."
+                }
+
+            ],
+
+            primary_action_label:
+                "Verify OTP",
+
+            primary_action:
+                async function() {
+
+                    const otp =
+                        d.get_value("otp");
+
+
+                    // ------------------------------------------------
+                    // Validate OTP input
+                    // ------------------------------------------------
+
+                    if (!otp) {
+
+                        frappe.msgprint({
+                            title: "OTP Required",
+                            message:
+                                "Please enter the OTP.",
+                            indicator: "orange"
+                        });
+
+                        return;
+                    }
+
+
+                    // ------------------------------------------------
+                    // Verify OTP
+                    // ------------------------------------------------
+
+                    const response =
+                        await frappe.call({
+
+                            method:
+                                "sync.mop_otp.verify_mop_otp",
+
+                            args: {
+
+                                token:
+                                    frm.__mop_otp_token,
+
+                                otp: otp,
+
+                                items:
+                                    JSON.stringify(items)
+                            },
+
+                            freeze: true,
+
+                            freeze_message:
+                                "Verifying OTP..."
+                        });
+
+
+                    const result =
+                        response.message || {};
+
+
+                    // ------------------------------------------------
+                    // Success
+                    // ------------------------------------------------
+
+                    if (
+                        result.verified
+                    ) {
+
+                        d.hide();
+
+                        frappe.show_alert({
+                            message:
+                                "MOP OTP verified successfully.",
+                            indicator: "green"
+                        });
+
+                        resolve_once(true);
+
+                        return;
+                    }
+
+
+                    // ------------------------------------------------
+                    // Failed
+                    // ------------------------------------------------
+
+                    frappe.msgprint({
+
+                        title:
+                            "OTP Verification Failed",
+
+                        message:
+                            result.message ||
+                            "Invalid or expired OTP.",
+
+                        indicator:
+                            "red"
+                    });
+                },
+
+
+            secondary_action_label:
+                "Cancel",
+
+            secondary_action:
+                function() {
+
+                    d.hide();
+
+                    resolve_once(false);
+                }
+        });
+
+
+        // ----------------------------------------------------
+        // Show dialog
+        // ----------------------------------------------------
+
+        d.show();
+
+
+        // ----------------------------------------------------
+        // Generate temporary browser token
+        //
+        // This is NOT a Sales Invoice field.
+        // It exists only in JavaScript memory.
+        // ----------------------------------------------------
+
+        frm.__mop_otp_token =
+            frappe.utils.get_random(32);
+
+
+        // ----------------------------------------------------
+        // Send OTP automatically
+        // ----------------------------------------------------
+
+        const send_response =
+            await frappe.call({
+
+                method:
+                    "sync.mop_otp.send_mop_otp",
+
+                args: {
+
+                    token:
+                        frm.__mop_otp_token,
+
+                    items:
+                        JSON.stringify(items)
+                },
+
+                freeze: true,
+
+                freeze_message:
+                    "Sending MOP OTP..."
+            });
+
+
+        const send_result =
+            send_response.message || {};
+
+
+        // ----------------------------------------------------
+        // SMS sent
+        // ----------------------------------------------------
+
+        if (
+            send_result.success
+        ) {
+
+            frappe.show_alert({
+
+                message:
+                    "OTP sent successfully. Valid for 5 minutes.",
+
+                indicator:
+                    "green"
+            });
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // SMS failed
+        // ----------------------------------------------------
+
+        d.hide();
+
+        frappe.msgprint({
+
+            title:
+                "OTP Sending Failed",
+
+            message:
+                send_result.message ||
+                "Unable to send OTP.",
+
+            indicator:
+                "red"
+        });
+
+        resolve_once(false);
+    });
+}
