@@ -197,6 +197,7 @@
 		"fieldname": "mop",
 		"insert_after": "rate",
 		"fieldtype": "Currency",
+		"fetch_from": "item_code.mop",
 		"precision": "",
 		"read_only": 1,
 		"in_list_view": 1,
@@ -217,4 +218,3 @@
 		"doctype": "Custom Field"
 	}
 ]
-
