@@ -5,7 +5,8 @@
  "engine": "InnoDB",
  "field_order": [
   "configuration_details",
-  "payment_entry"
+  "payment_entry",
+  "mop_otp"
  ],
  "fields": [
   {
@@ -19,11 +20,17 @@
    "fieldname": "payment_entry",
    "fieldtype": "Check",
    "label": "Payment Entry"
+  },
+  {
+   "default": "0",
+   "fieldname": "mop_otp",
+   "fieldtype": "Check",
+   "label": "MOP OTP"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2025-06-02 19:08:33.226078",
+ "modified": "2026-10-05 11:39:13.885360",
  "modified_by": "Administrator",
  "module": "Sync",
  "name": "Configuration",
@@ -40,6 +47,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

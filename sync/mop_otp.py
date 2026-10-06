@@ -223,17 +223,17 @@ def get_approval_cache_key(user, fingerprint):
 # SEND OTP
 # ============================================================
 
+
 @frappe.whitelist()
 def send_mop_otp(token, items):
-    """
-    Generate and send MOP OTP.
 
-    Works for NEW Sales Invoices because we do not fetch
-    Sales Invoice from database.
-
-    items contains only item_code/rate/idx from browser.
-    MOP is fetched from Item Master.
-    """
+    # MOP OTP disabled
+    if not is_mop_otp_enabled():
+        return {
+            "success": True,
+            "required": False,
+            "message": "MOP OTP is disabled."
+        }
 
     if not token:
         frappe.throw("OTP token is required.")
@@ -241,12 +241,9 @@ def send_mop_otp(token, items):
     if not items:
         frappe.throw("MOP item data is required.")
 
-    # Build authoritative MOP violation list
     mop_items = get_mop_items_from_request(items)
 
-    # If all rates are >= MOP, OTP is not required
     if not mop_items:
-
         return {
             "success": False,
             "required": False,
@@ -256,29 +253,20 @@ def send_mop_otp(token, items):
             )
         }
 
-    # Generate random 6-digit OTP
-    otp = str(
-        random.randint(100000, 999999)
-    )
+    otp = str(random.randint(100000, 999999))
 
     cache_key = get_otp_cache_key(token)
 
-    # Store OTP for 5 minutes
     frappe.cache().set_value(
         cache_key,
         otp,
         expires_in_sec=OTP_EXPIRY
     )
 
-    # Send SMS
     response = send_mop_sms(otp)
 
-    # SMS failed -> remove OTP
     if not response.get("success"):
-
-        frappe.cache().delete_value(
-            cache_key
-        )
+        frappe.cache().delete_value(cache_key)
 
         return {
             "success": False,
@@ -299,13 +287,20 @@ def send_mop_otp(token, items):
         "expires_in": OTP_EXPIRY
     }
 
-
 # ============================================================
 # VERIFY OTP
 # ============================================================
 
 @frappe.whitelist()
 def verify_mop_otp(token, otp, items):
+# def verify_mop_otp(token, otp, items):
+
+    # MOP OTP disabled
+    if not is_mop_otp_enabled():
+        return {
+            "verified": True,
+            "message": "MOP OTP is disabled."
+        }
     """
     Verify OTP.
 
@@ -450,34 +445,29 @@ def is_mop_approval_valid(mop_items):
 
 @frappe.whitelist()
 def check_mop_approval(items):
-    """
-    Client-side check before saving.
 
-    Returns whether current MOP combination already
-    has a valid OTP approval.
-    """
-
-    if not items:
-
-        return {
-            "approved": True
-        }
-
-    mop_items = get_mop_items_from_request(
-        items
-    )
-
-    # No violation
-    if not mop_items:
-
+    # MOP OTP disabled
+    if not is_mop_otp_enabled():
         return {
             "approved": True,
             "required": False
         }
 
-    approved = is_mop_approval_valid(
-        mop_items
-    )
+    if not items:
+        return {
+            "approved": True,
+            "required": False
+        }
+
+    mop_items = get_mop_items_from_request(items)
+
+    if not mop_items:
+        return {
+            "approved": True,
+            "required": False
+        }
+
+    approved = is_mop_approval_valid(mop_items)
 
     return {
         "approved": approved,
@@ -543,3 +533,9 @@ def send_mop_sms(otp):
                 f"SMS API Request Failed: {str(e)}"
             )
         }
+
+def is_mop_otp_enabled():
+    return frappe.db.get_single_value(
+        "Configuration",
+        "mop_otp"
+    ) == 1
