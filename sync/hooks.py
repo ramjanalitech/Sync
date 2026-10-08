@@ -142,15 +142,6 @@ doctype_js = {
 # 		"on_trash": "method"
 # 	}
 # }
-doc_events = {
-    "Sales Invoice": {
-        # "on_submit": "sync.attachment.generate_pdf_on_submit"
-        "on_submit": "sync.whatsapp.generate_pdf_and_send_whatsapp_on_submit"
-    },
-    "Payment Entry": {
-        "on_submit": "sync.payment_entry.send_whatsapp_on_payment_submit"
-    }
-}
 
 doc_events = {
     "Item": {
@@ -158,9 +149,16 @@ doc_events = {
     },
 
     "Sales Invoice": {
-        "validate": "sync.sales_invoice.validate_mop"
+        "validate": "sync.sales_invoice.validate_mop",
+        "on_submit": "sync.whatsapp.generate_pdf_and_send_whatsapp_on_submit"
+    },
+
+    "Payment Entry": {
+        "on_submit": "sync.payment_entry.send_whatsapp_on_payment_submit"
     }
 }
+
+
 # scheduler_events = {
 #     "daily": [
 #         "sync.overdue_invoice.send_overdue_invoice_reminders"

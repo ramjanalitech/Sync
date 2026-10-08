@@ -1,6 +1,11 @@
 import frappe
 import random
 import requests
+from sync.mop_otp import (
+    get_mop_items,
+    is_mop_approval_valid,
+    is_mop_otp_enabled,
+)
 
 @frappe.whitelist()
 def get_last_rates(customer, item_code):
@@ -86,15 +91,6 @@ def send_whatsapp_message(receiver_mobile_no, otp, customer_name=None):
             frappe.throw(f"Error from API: {response.status_code} - {response.text}")
     except Exception as e:
         frappe.throw(f"API Request Failed: {str(e)}")
-
-import frappe
-
-from sync.mop_otp import (
-    get_mop_items,
-    is_mop_approval_valid,
-    is_mop_otp_enabled,
-)
-
 
 def validate_mop(doc, method=None):
     """
